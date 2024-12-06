@@ -1,101 +1,212 @@
-import Image from "next/image";
+"use client";
+
+import { useState } from "react";
+import { motion } from "motion/react";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const answer = "SMART";
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
+  const defaultRows = Array.from({ length: 6 }, (_, rowIndex) => ({
+    id: crypto.randomUUID(),
+    index: rowIndex,
+    letters: Array.from({ length: 5 }, (_, letterIndex) => ({
+      index: letterIndex,
+      id: crypto.randomUUID(),
+      value: "",
+      status: "default",
+    })) as Letter[],
+  }));
+
+  const [rows, setRows] = useState<IRow[]>(defaultRows);
+  const [activeRow, setActiveRow] = useState<number>(0);
+  const [input, setInput] = useState<string>("");
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    if (rows.length === activeRow) return;
+    e.preventDefault();
+    const newRows = [...rows];
+    newRows[activeRow].letters = input
+      .split("")
+      .map((letter: string, index: number) => {
+        let status: Letter["status"] = "default";
+
+        const answerLower = answer.toLowerCase();
+        const letterLower = letter.toLowerCase();
+
+        if (letterLower === answerLower[index]) {
+          status = "correct";
+        } else if (answerLower.includes(letterLower)) {
+          status = "misplaced";
+        } else {
+          status = "incorrect";
+        }
+
+        return {
+          id: crypto.randomUUID(),
+          value: letter,
+          status,
+        };
+      });
+    setRows(newRows);
+    setActiveRow(activeRow + 1);
+    setInput("");
+  };
+
+  const handleLetterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+
+    let index;
+    let inputLetter;
+
+    if (input.length > value.length) {
+      index = value.length;
+      inputLetter = "";
+    } else {
+      index = input.length;
+      inputLetter = value[value.length - 1];
+    }
+
+    const newRows = [...rows];
+    const updatedRow = newRows[activeRow];
+
+    updatedRow.letters[index].value = inputLetter;
+
+    setInput(value);
+    setRows(newRows);
+  };
+
+  return (
+    <Wrapper>
+      <RowList rows={rows} activeRow={activeRow} />
+      <div className="flex justify-center mt-8">
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            className="w-full bg-black border border-white rounded-md p-2 max-w-xs"
+            placeholder="Enter your guess"
+            value={input}
+            maxLength={5}
+            minLength={5}
+            onChange={(e) => handleLetterChange(e)}
           />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+        </form>
+      </div>
+    </Wrapper>
   );
 }
+
+interface IRowList {
+  rows: IRow[];
+  activeRow?: number;
+}
+
+const RowList = ({ rows, activeRow }: IRowList) => {
+  return (
+    <div className="flex flex-col gap-3 justify-center">
+      {rows.map((row, index) => (
+        <Row
+          key={row.id}
+          id={row.id}
+          letters={row.letters}
+          index={index}
+          activeRow={activeRow ?? 0}
+        />
+      ))}
+    </div>
+  );
+};
+
+interface IRow {
+  id: string;
+  letters: Letter[];
+  index: number;
+  activeRow?: number;
+}
+
+interface Letter {
+  id: string;
+  value: string;
+  status: "correct" | "incorrect" | "misplaced" | "default";
+}
+
+const Row = ({ letters, activeRow, index }: IRow) => {
+  const isGuessing = activeRow ? activeRow > index : false;
+  return (
+    <div className="flex gap-2 justify-center">
+      {letters.map((letter, index) => (
+        <Letter
+          key={letter.id}
+          letter={letter}
+          isGuessing={isGuessing}
+          index={index}
+        />
+      ))}
+    </div>
+  );
+};
+
+const Letter = ({
+  letter,
+  isGuessing,
+  index,
+}: {
+  letter: Letter;
+  isGuessing: boolean;
+  index: number;
+}) => {
+  const statusMap = {
+    correct: {
+      backgroundColor: "#008800",
+    },
+    incorrect: {
+      backgroundColor: "#666666",
+    },
+    misplaced: {
+      backgroundColor: "#888800",
+    },
+    default: {
+      backgroundColor: "transparent",
+    },
+  } as const;
+
+  return (
+    <motion.div
+      animate={isGuessing ? "guessing" : "default"}
+      variants={{
+        default: { backgroundColor: "transparent", rotateX: 0 },
+        // Animation explanation:
+        // The state of each row is set all at once, but under the hood,
+        // we animate the letters individually, by a delay effect based on the index.
+        // Additionally, we do a little delay on backgroundColor to make it change in the middle of the rotation.
+        // This creates a nice effect where the background color changes in the middle of the rotation.
+        guessing: {
+          backgroundColor: statusMap[letter.status].backgroundColor,
+          rotateX: [0, 90, 0],
+          transition: {
+            backgroundColor: {
+              delay: 0.2 + index * 0.25,
+              duration: 0.25,
+              ease: "easeInOut",
+            },
+            rotateX: {
+              delay: 0 + index * 0.25,
+              duration: 0.5,
+              ease: "easeInOut",
+            },
+          },
+        },
+      }}
+      className={`w-14 h-14 border border-white flex items-center justify-center`}
+    >
+      <span className="text-3xl font-bold uppercase">{letter.value}</span>
+    </motion.div>
+  );
+};
+
+const Wrapper = ({ children }: { children: React.ReactNode }) => {
+  return (
+    <div className="pt-10 h-full">
+      <div className="mx-auto max-w-2xl">{children}</div>
+    </div>
+  );
+};
