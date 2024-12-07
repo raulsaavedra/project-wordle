@@ -33,6 +33,8 @@ export const Game = () => {
     )
     .filter(Boolean);
 
+  const lastGuess = guesses?.[guesses.length - 1];
+
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -180,9 +182,9 @@ export const Game = () => {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.5 }}
             >
-              The actual answer is not{" "}
-              {guesses?.[guesses.length - 1]?.toUpperCase()}, but the developer
-              likes geese. Therefore, you win. 🪿
+              The actual answer is not {lastGuess?.toUpperCase()}, but the
+              developer likes geese.{" "}
+              <span className="text-green-500">Therefore, you win. 🪿</span>
             </motion.div>
           )}
         </AnimatePresence>
