@@ -27,10 +27,6 @@ export const Letter = ({ letter, isGuessing, index }: LetterProps) => {
     },
   } as const;
 
-  if (isGuessing) {
-    console.log(statusMap[letter.status].borderColor);
-  }
-
   return (
     <motion.div
       animate={isGuessing ? "guessing" : "default"}
