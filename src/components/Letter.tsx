@@ -10,42 +10,57 @@ interface LetterProps {
 export const Letter = ({ letter, isGuessing, index }: LetterProps) => {
   const statusMap = {
     correct: {
-      backgroundColor: "#008800",
+      backgroundColor: "rgb(20, 148, 47)",
+      borderColor: "transparent",
     },
     incorrect: {
-      backgroundColor: "#666666",
+      backgroundColor: "rgb(102, 102, 102)",
+      borderColor: "transparent",
     },
     misplaced: {
-      backgroundColor: "#888800",
+      backgroundColor: "rgb(138, 138, 0)",
+      borderColor: "transparent",
     },
     default: {
       backgroundColor: "transparent",
+      borderColor: "rgb(107, 114, 128)",
     },
   } as const;
+
+  if (isGuessing) {
+    console.log(statusMap[letter.status].borderColor);
+  }
 
   return (
     <motion.div
       animate={isGuessing ? "guessing" : "default"}
       variants={{
-        default: { backgroundColor: "transparent", rotateX: 0 },
+        default: {
+          backgroundColor: statusMap[letter.status].backgroundColor,
+          borderColor: statusMap[letter.status].borderColor,
+          rotateX: 0,
+        },
         guessing: {
           backgroundColor: statusMap[letter.status].backgroundColor,
+          borderColor: statusMap[letter.status].borderColor,
           rotateX: [0, 90, 0],
           transition: {
             backgroundColor: {
               delay: 0.2 + index * 0.25,
               duration: 0.25,
-              ease: "easeInOut",
+            },
+            borderColor: {
+              delay: 0.2 + index * 0.25,
+              duration: 0.25,
             },
             rotateX: {
               delay: 0 + index * 0.25,
               duration: 0.5,
-              ease: "easeInOut",
             },
           },
         },
       }}
-      className={`w-14 h-14 border border-white flex items-center justify-center`}
+      className={`w-14 h-14 flex items-center justify-center border border-solid border-gray-500`}
     >
       <span className="text-3xl font-bold uppercase">{letter.value}</span>
     </motion.div>

@@ -82,7 +82,7 @@ export const Game = () => {
         <form onSubmit={handleSubmit}>
           <input
             type="text"
-            className="w-full bg-black border border-white rounded-md p-2 max-w-xs"
+            className="w-full bg-black border border-gray-500 rounded-md p-2 max-w-xs"
             placeholder="Enter your guess"
             value={input}
             maxLength={5}
