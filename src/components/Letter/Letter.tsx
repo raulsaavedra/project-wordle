@@ -1,5 +1,5 @@
 import { motion } from "motion/react";
-import { Letter as LetterType } from "./types";
+import { Letter as LetterType } from "../types";
 
 interface LetterProps {
   letter: LetterType;

@@ -1,5 +1,5 @@
-import { IRow } from "./types";
-import { Letter } from "./Letter";
+import { IRow } from "../types";
+import { Letter } from "../Letter";
 
 export const Row = ({ letters, activeRow, index }: IRow) => {
   const isGuessing = activeRow ? activeRow > index : false;

@@ -1,5 +1,5 @@
-import { IRowList } from "./types";
-import { Row } from "./Row";
+import { IRowList } from "../types";
+import { Row } from "../Row";
 
 export const RowList = ({ rows, activeRow }: IRowList) => {
   return (

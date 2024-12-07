@@ -1,10 +1,10 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { IRow, Letter } from "./types";
-import { RowList } from "./RowList";
-import { getAnswer } from "./answers";
-import { Form } from "./Form";
-import { Finished } from "./Finished";
+import { IRow, Letter } from "../types";
+import { RowList } from "../RowList";
+import { getAnswer } from "../answers";
+import { Form } from "../Form";
+import { Finished } from "../Finished";
 
 export const Game = () => {
   const answer = getAnswer();
