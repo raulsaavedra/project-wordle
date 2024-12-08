@@ -19,7 +19,7 @@ export const Game = () => {
   } = useGame();
 
   return (
-    <div>
+    <div className="pb-10">
       <RowList rows={rows} activeRow={activeRow} />
       <Keyboard
         rows={rows}
