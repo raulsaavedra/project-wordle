@@ -4,6 +4,8 @@ While the course provides a starter template with helper functions and pre-writt
 
 This project is built with Next.js, TailwindCSS, and Framer Motion to create an interactive word-guessing game.
 
+Bonus points for GOOSE or GEESE words.
+
 Progress:
 
 - [x] Implement word grid
