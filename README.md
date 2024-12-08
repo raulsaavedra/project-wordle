@@ -9,5 +9,6 @@ Progress:
 - [x] Implement word grid
 - [x] Implement word animation
 - [x] Managing row state
-- [ ] Adding winning and losing states
-- [ ] Adding keyboard
+- [x] Adding winning and losing states
+- [x] Adding keyboard
+- [x] Adding copy button

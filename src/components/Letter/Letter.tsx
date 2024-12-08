@@ -7,26 +7,26 @@ interface LetterProps {
   index: number;
 }
 
-export const Letter = ({ letter, isGuessing, index }: LetterProps) => {
-  const statusMap = {
-    correct: {
-      backgroundColor: "rgb(20, 148, 47)",
-      borderColor: "transparent",
-    },
-    incorrect: {
-      backgroundColor: "rgb(102, 102, 102)",
-      borderColor: "transparent",
-    },
-    misplaced: {
-      backgroundColor: "rgb(138, 138, 0)",
-      borderColor: "transparent",
-    },
-    default: {
-      backgroundColor: "transparent",
-      borderColor: "rgb(107, 114, 128)",
-    },
-  } as const;
+export const statusMap = {
+  correct: {
+    backgroundColor: "rgb(20, 148, 47)",
+    borderColor: "transparent",
+  },
+  incorrect: {
+    backgroundColor: "rgb(102, 102, 102)",
+    borderColor: "transparent",
+  },
+  misplaced: {
+    backgroundColor: "rgb(138, 138, 0)",
+    borderColor: "transparent",
+  },
+  default: {
+    backgroundColor: "transparent",
+    borderColor: "rgb(107, 114, 128)",
+  },
+} as const;
 
+export const Letter = ({ letter, isGuessing, index }: LetterProps) => {
   return (
     <motion.div
       animate={isGuessing ? "guessing" : "default"}
@@ -56,9 +56,11 @@ export const Letter = ({ letter, isGuessing, index }: LetterProps) => {
           },
         },
       }}
-      className={`w-14 h-14 flex items-center justify-center border border-solid border-gray-500`}
+      className={`w-12 h-12 md:w-14 md:h-14 flex items-center justify-center border border-solid border-gray-500`}
     >
-      <span className="text-3xl font-bold uppercase">{letter.value}</span>
+      <span className="text-2xl md:text-3xl font-bold uppercase">
+        {letter.value}
+      </span>
     </motion.div>
   );
 };
