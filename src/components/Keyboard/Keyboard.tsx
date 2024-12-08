@@ -116,6 +116,7 @@ export const Keyboard: React.FC<KeyboardProps> = ({
                   sm:flex-initial
                   disabled:opacity-25 disabled:cursor-not-allowed
                   transition-all duration-300
+                  ${key === "⌫" ? "min-w-[40px]" : ""}
                 `}
               >
                 {key}
