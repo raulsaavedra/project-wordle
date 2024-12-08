@@ -6,7 +6,7 @@ This project is built with Next.js, TailwindCSS, and Framer Motion to create an 
 
 Bonus points for GOOSE or GEESE words.
 
-Link: [https://project-wordle.vercel.app/](https://project-wordle.vercel.app/)
+Link: [https://project-wordle.vercel.app/](https://project-wordle-zeta.vercel.app/)
 
 Progress:
 
