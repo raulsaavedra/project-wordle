@@ -106,7 +106,7 @@ export const Keyboard: React.FC<KeyboardProps> = ({
                 }}
                 initial={false}
                 transition={{
-                  delay: 1.25,
+                  delay: gameStatus === "guessing" ? 1.25 : 0,
                 }}
                 className={`
                   mx-0.5 px-2 sm:mx-1 py-3 sm:px-3 sm:py-4 rounded 

@@ -3,7 +3,6 @@
 import { RowList } from "../RowList";
 import { Finished } from "../Finished";
 import { Keyboard } from "../Keyboard/Keyboard";
-import { CopyButton } from "../CopyButton/CopyButton";
 import { useGame } from "../../hooks/useGame";
 
 export const Game = () => {
@@ -16,6 +15,9 @@ export const Game = () => {
     handleLetterChange,
     handleSubmit,
     answer,
+    handleCloseModal,
+    handleOpenModal,
+    isModalOpen,
   } = useGame();
 
   return (
@@ -28,8 +30,15 @@ export const Game = () => {
         input={input}
         gameStatus={gameStatus}
       />
-      <Finished gameStatus={gameStatus} lastGuess={lastGuess} />
-      <CopyButton gameStatus={gameStatus} rows={rows} answer={answer} />
+      <Finished
+        gameStatus={gameStatus}
+        lastGuess={lastGuess}
+        rows={rows}
+        answer={answer}
+        handleOpenModal={handleOpenModal}
+        handleCloseModal={handleCloseModal}
+        isModalOpen={isModalOpen}
+      />
     </div>
   );
 };

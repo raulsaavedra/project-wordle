@@ -3,6 +3,8 @@ import { getAnswer } from "../components/answers";
 import { Letter, IRow } from "../components/types";
 import { guessLetter } from "../utils/guessLetter";
 
+export type GameStatus = "win" | "lose" | "playing" | "guessing" | "goose";
+
 export const useGame = () => {
   const answer = getAnswer();
 
@@ -20,9 +22,27 @@ export const useGame = () => {
   const [rows, setRows] = useState<IRow[]>(defaultRows);
   const [activeRow, setActiveRow] = useState<number>(0);
   const [input, setInput] = useState<string>("");
-  const [gameStatus, setGameStatus] = useState<
-    "win" | "lose" | "playing" | "guessing" | "goose"
-  >("playing");
+
+  const [gameStatus, setGameStatus] = useState<GameStatus>("playing");
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setGameStatus("playing");
+    resetGame();
+  };
+
+  const resetGame = () => {
+    setRows(defaultRows);
+    setActiveRow(0);
+    setInput("");
+    setGameStatus("playing");
+  };
 
   const guesses = rows
     .map((row) =>
@@ -64,10 +84,13 @@ export const useGame = () => {
     setTimeout(() => {
       if (isGoose) {
         setGameStatus("goose");
+        setIsModalOpen(true);
       } else if (hasWinningGuess) {
         setGameStatus("win");
+        setIsModalOpen(true);
       } else if (hasNoMoreGuesses) {
         setGameStatus("lose");
+        setIsModalOpen(true);
       } else {
         setGameStatus("playing");
       }
@@ -98,6 +121,9 @@ export const useGame = () => {
     lastGuess,
     handleSubmit,
     handleLetterChange,
+    isModalOpen,
+    handleOpenModal,
+    handleCloseModal,
     answer,
   };
 };

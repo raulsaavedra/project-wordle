@@ -1,6 +1,8 @@
 import React from "react";
 import { IRow } from "../types";
 import { AnimatePresence, motion } from "motion/react";
+import { Button } from "../ui/button";
+
 interface CopyButtonProps {
   gameStatus: string;
   rows: IRow[];
@@ -62,24 +64,20 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
   return (
     <AnimatePresence>
       {gameStatus === "win" || gameStatus === "lose" ? (
-        <div className="flex justify-center mt-8 max-w-xs text-center mx-auto">
-          <motion.button
-            onClick={handleCopy}
-            className="px-6 py-3 bg-green-700 text-white text-xl rounded-xl hover:bg-green-500 transition-colors font-semibold"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <span className="mr-2">
-              {copied ? "Copied to clipboard! " : "Share"}
-            </span>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
+          <Button variant="success" onClick={handleCopy}>
+            <span className="mr-2">{copied ? "Copied! " : "Copy"}</span>
             {copied ? null : (
               <>
                 <span className="text-base">💬</span>
               </>
             )}
-          </motion.button>
-        </div>
+          </Button>
+        </motion.div>
       ) : null}
     </AnimatePresence>
   );
