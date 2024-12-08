@@ -4,6 +4,7 @@ import { RowList } from "../RowList";
 import { Finished } from "../Finished";
 import { Keyboard } from "../Keyboard/Keyboard";
 import { useGame } from "../../hooks/useGame";
+import { Header } from "../Header";
 
 export const Game = () => {
   const {
@@ -22,6 +23,7 @@ export const Game = () => {
 
   return (
     <div className="pb-10">
+      <Header />
       <RowList rows={rows} activeRow={activeRow} />
       <Keyboard
         rows={rows}
