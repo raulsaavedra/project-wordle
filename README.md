@@ -1,4 +1,4 @@
-This is the project based on Project Wordle from [Joy of React](https://www.joyofreact.com/).
+This is a project based on Project Wordle from [The Joy of React](https://www.joyofreact.com/). (Which I highly recommend!)
 
 While the course provides a starter template with helper functions and pre-written CSS, I chose to challenge myself by building this project from scratch without using the template.
 
