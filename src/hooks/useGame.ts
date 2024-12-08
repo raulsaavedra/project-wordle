@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { getAnswer } from "../components/answers";
 import { Letter, IRow } from "../components/types";
-import { guessLetter } from "../utils/guessLetter";
+import { guessLetter } from "../utils/letterStatus";
 
 export type GameStatus = "win" | "lose" | "playing" | "guessing" | "goose";
 

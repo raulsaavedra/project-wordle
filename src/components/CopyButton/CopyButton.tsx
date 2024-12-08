@@ -2,6 +2,7 @@ import React from "react";
 import { IRow } from "../types";
 import { AnimatePresence, motion } from "motion/react";
 import { Button } from "../ui/button";
+import { letterStatusToEmoji } from "@/utils/letterStatus";
 
 interface CopyButtonProps {
   gameStatus: string;
@@ -15,9 +16,7 @@ const getLetterStatus = (
   answer: string,
   index: number
 ): string => {
-  if (letter.toLowerCase() === answer[index].toLowerCase()) return "🟩";
-  if (answer.toLowerCase().includes(letter.toLowerCase())) return "🟨";
-  return "⬛";
+  return letterStatusToEmoji(letter, answer, index);
 };
 
 const formatGameResult = (

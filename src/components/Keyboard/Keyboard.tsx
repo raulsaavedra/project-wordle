@@ -2,6 +2,7 @@ import React from "react";
 import { IRow, Letter } from "../types";
 import { statusMap } from "../Letter/Letter";
 import { motion } from "motion/react";
+import { getKeyboardLetterStatus } from "@/utils/letterStatus";
 
 interface KeyboardProps {
   handleLetterChange: (letter: string) => void;
@@ -42,29 +43,7 @@ export const Keyboard: React.FC<KeyboardProps> = ({
 
   // Get the most relevant status for each letter from all guessed rows
   const getLetterStatus = (letter: string): Letter["status"] => {
-    let status: Letter["status"] = "default";
-
-    // Go through all rows to find the most relevant status
-    rows.forEach((row) => {
-      row.letters.forEach((l) => {
-        if (l.value.toUpperCase() === letter) {
-          // Correct status takes precedence
-          if (l.status === "correct") {
-            status = "correct";
-          }
-          // Misplaced status takes precedence over incorrect/default
-          else if (l.status === "misplaced" && status !== "correct") {
-            status = "misplaced";
-          }
-          // Incorrect status only if no better status found
-          else if (l.status === "incorrect" && status === "default") {
-            status = "incorrect";
-          }
-        }
-      });
-    });
-
-    return status;
+    return getKeyboardLetterStatus(letter, rows);
   };
 
   React.useEffect(() => {
