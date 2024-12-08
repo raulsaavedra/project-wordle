@@ -13,8 +13,8 @@ const getLetterStatus = (
   answer: string,
   index: number
 ): string => {
-  if (letter.toLowerCase() === answer[index]) return "🟩";
-  if (answer.includes(letter.toLowerCase())) return "🟨";
+  if (letter.toLowerCase() === answer[index].toLowerCase()) return "🟩";
+  if (answer.toLowerCase().includes(letter.toLowerCase())) return "🟨";
   return "⬛";
 };
 
@@ -26,6 +26,7 @@ const formatGameResult = (
   const filledRows = rows.filter((row) =>
     row.letters.every((letter) => letter.value !== "")
   );
+
   const resultPattern = filledRows
     .map((row) =>
       row.letters
@@ -48,6 +49,7 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
     if (gameStatus !== "win" && gameStatus !== "lose") return;
 
     const result = formatGameResult(rows, gameNumber, answer);
+
     try {
       await navigator.clipboard.writeText(result);
       setCopied(true);

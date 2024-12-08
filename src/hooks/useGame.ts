@@ -76,6 +76,7 @@ export const useGame = () => {
 
   const handleLetterChange = (letter: string) => {
     if (letter === "⌫" && input.length === 0) return;
+    if (input.length === 5 && letter !== "⌫") return;
 
     const newInput = letter === "⌫" ? input.slice(0, -1) : input + letter;
     const index = letter === "⌫" ? input.length - 1 : input.length;
