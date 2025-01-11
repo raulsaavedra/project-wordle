@@ -5,6 +5,7 @@ import React, { useContext } from "react";
 import { CopyButton } from "../CopyButton";
 import Image from "next/image";
 import { GameContext } from "@/providers/GameProvider";
+import { getLastGuess } from "@/utils/getGuesses";
 
 interface GameStatusMessageProps {
   children: React.ReactNode;
@@ -26,7 +27,9 @@ const GameStatusMessage = ({ children, variant }: GameStatusMessageProps) => {
 };
 
 export const Finished = () => {
-  const { gameStatus, lastGuess, resetGame } = useContext(GameContext);
+  const { gameStatus, resetGame, rows } = useContext(GameContext);
+
+  const lastGuess = getLastGuess(rows);
 
   const isModalOpen =
     gameStatus === "win" || gameStatus === "lose" || gameStatus === "goose";

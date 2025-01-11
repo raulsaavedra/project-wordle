@@ -21,15 +21,22 @@ const KEYBOARD_ROWS = [
 ];
 
 export const Keyboard: React.FC = () => {
-  const { handleLetterChange, handleSubmit, gameStatus, rows } =
-    useContext(GameContext);
+  const {
+    handleLetterAdd,
+    handleLetterRemove,
+    handleSubmit,
+    gameStatus,
+    rows,
+  } = useContext(GameContext);
 
   const handleKeyClick = (key: string) => {
     if (gameStatus !== "playing") return;
     if (key === "ENTER") {
       handleSubmit();
+    } else if (key === "⌫") {
+      handleLetterRemove();
     } else {
-      handleLetterChange(key);
+      handleLetterAdd(key);
     }
   };
 
@@ -40,14 +47,14 @@ export const Keyboard: React.FC = () => {
 
   const handleKeyDown = (key: string) => {
     if (gameStatus !== "playing") return;
-    if (key === "BACKSPACE") {
-      return handleLetterChange("⌫");
-    }
     if (key === "ENTER") {
       return handleSubmit();
     }
+    if (key === "BACKSPACE") {
+      return handleLetterRemove();
+    }
     if (key.length === 1 && key.match(/[A-Z]/)) {
-      return handleLetterChange(key);
+      return handleLetterAdd(key);
     }
   };
 

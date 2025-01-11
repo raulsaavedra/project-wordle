@@ -16,7 +16,7 @@ export const getGameStatus = (
   const isGoose =
     guesses.includes("goose") ||
     guesses.includes("geese") ||
-    guesses.includes("honk");
+    guesses.includes("honks");
 
   if (isGoose) return "goose";
   if (hasWinningGuess) return "win";

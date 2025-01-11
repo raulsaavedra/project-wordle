@@ -12,9 +12,9 @@ type GameContextType = {
   rows: IRow[];
   activeRow: number;
   guess: string;
-  lastGuess: string;
   gameStatus: GameStatus;
-  handleLetterChange: (letter: string) => void;
+  handleLetterAdd: (letter: string) => void;
+  handleLetterRemove: () => void;
   handleSubmit: () => void;
   resetGame: () => void;
 };
@@ -23,9 +23,9 @@ export const GameContext = createContext<GameContextType>({
   rows: [],
   activeRow: 0,
   guess: "",
-  lastGuess: "",
   gameStatus: "playing",
-  handleLetterChange: () => {},
+  handleLetterAdd: () => {},
+  handleLetterRemove: () => {},
   handleSubmit: () => {},
   resetGame: () => {},
 });
@@ -57,17 +57,10 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
     setGameStatus("playing");
   }, [defaultRows]);
 
-  const guesses = rows
-    .map((row) =>
-      row.guess.map((letter) => letter.value.toLowerCase()).join("")
-    )
-    .filter(Boolean);
-
-  const lastGuess = guesses?.[guesses.length - 1];
-
   const handleSubmit = useCallback(() => {
     if (rows.length === activeRow) return;
     if (guess.length !== 5) return;
+
     const newRows = [...rows];
     newRows[activeRow].guess = guessWord(guess, answer.word);
 
@@ -83,36 +76,34 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
     }, 1500);
   }, [rows, activeRow, guess, answer]);
 
-  const handleBackspace = useCallback(() => {
+  const handleRowLetterChange = useCallback(
+    (value: string, index: number) => {
+      const newRows = [...rows];
+      const updatedRow = newRows[activeRow];
+      updatedRow.guess[index].value = value;
+      setRows(newRows);
+    },
+    [rows, activeRow]
+  );
+
+  const handleLetterRemove = useCallback(() => {
     if (guess.length === 0) return;
 
     const newGuess = guess.slice(0, -1);
     setGuess(newGuess);
-    const newRows = [...rows];
-    const updatedRow = newRows[activeRow];
 
-    const letterIndex = guess.length - 1;
-    updatedRow.guess[letterIndex].value = "";
-    setRows(newRows);
-  }, [guess, rows, activeRow]);
+    handleRowLetterChange("", guess.length - 1);
+  }, [guess, handleRowLetterChange]);
 
-  const handleLetterChange = useCallback(
+  const handleLetterAdd = useCallback(
     (letter: string) => {
-      if (letter === "⌫") {
-        handleBackspace();
-        return;
-      }
       if (guess.length === 5) return;
       const newGuess = guess + letter;
       setGuess(newGuess);
 
-      const newRows = [...rows];
-      const updatedRow = newRows[activeRow];
-      const letterIndex = guess.length;
-      updatedRow.guess[letterIndex].value = letter;
-      setRows(newRows);
+      handleRowLetterChange(letter, guess.length);
     },
-    [guess, rows, activeRow, handleBackspace]
+    [guess, handleRowLetterChange]
   );
 
   const value = useMemo(
@@ -120,9 +111,9 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
       rows,
       activeRow,
       guess,
-      lastGuess,
       gameStatus,
-      handleLetterChange,
+      handleLetterAdd,
+      handleLetterRemove,
       handleSubmit,
       resetGame,
     }),
@@ -130,9 +121,9 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
       rows,
       activeRow,
       guess,
-      lastGuess,
       gameStatus,
-      handleLetterChange,
+      handleLetterAdd,
+      handleLetterRemove,
       handleSubmit,
       resetGame,
     ]
