@@ -1,6 +1,6 @@
 export interface IRow {
   id: string;
-  letters: Letter[];
+  guess: Letter[];
   index: number;
 }
 

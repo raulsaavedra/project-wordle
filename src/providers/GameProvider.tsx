@@ -4,6 +4,7 @@ import { useState } from "react";
 import { getAnswer } from "../components/answers";
 import { Letter, IRow } from "../components/types";
 import { guessWord } from "@/utils/letterStatus";
+import { getGameStatus } from "@/utils/gameStatus";
 
 export type GameStatus = "win" | "lose" | "playing" | "guessing" | "goose";
 
@@ -35,7 +36,7 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
   const defaultRows = Array.from({ length: 6 }, (_, rowIndex) => ({
     id: crypto.randomUUID(),
     index: rowIndex,
-    letters: Array.from({ length: 5 }, (_, letterIndex) => ({
+    guess: Array.from({ length: 5 }, (_, letterIndex) => ({
       index: letterIndex,
       id: crypto.randomUUID(),
       value: "",
@@ -58,7 +59,7 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
 
   const guesses = rows
     .map((row) =>
-      row.letters.map((letter) => letter.value.toLowerCase()).join("")
+      row.guess.map((letter) => letter.value.toLowerCase()).join("")
     )
     .filter(Boolean);
 
@@ -68,21 +69,9 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
     if (rows.length === activeRow) return;
     if (guess.length !== 5) return;
     const newRows = [...rows];
-    newRows[activeRow].letters = guessWord(guess, answer.word);
+    newRows[activeRow].guess = guessWord(guess, answer.word);
 
     const newActiveRow = activeRow + 1;
-
-    const newGuesses = newRows.map((row) =>
-      row.letters.map((letter) => letter.value.toLowerCase()).join("")
-    );
-
-    const hasWinningGuess = newGuesses.includes(answer.word.toLowerCase());
-    const hasNoMoreGuesses = newActiveRow === rows.length;
-
-    const isGoose =
-      newGuesses.includes("goose") ||
-      newGuesses.includes("geese") ||
-      newGuesses.includes("honks");
 
     setRows(newRows);
     setActiveRow(newActiveRow);
@@ -90,15 +79,7 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
 
     setGameStatus("guessing");
     setTimeout(() => {
-      if (isGoose) {
-        setGameStatus("goose");
-      } else if (hasWinningGuess) {
-        setGameStatus("win");
-      } else if (hasNoMoreGuesses) {
-        setGameStatus("lose");
-      } else {
-        setGameStatus("playing");
-      }
+      setGameStatus(getGameStatus(newRows, newActiveRow, answer.word));
     }, 1500);
   }, [rows, activeRow, guess, answer]);
 
@@ -107,13 +88,11 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
 
     const newGuess = guess.slice(0, -1);
     setGuess(newGuess);
-
     const newRows = [...rows];
     const updatedRow = newRows[activeRow];
 
-    const guessIndex = guess.length - 1;
-    updatedRow.letters[guessIndex].value = "";
-
+    const letterIndex = guess.length - 1;
+    updatedRow.guess[letterIndex].value = "";
     setRows(newRows);
   }, [guess, rows, activeRow]);
 
@@ -129,13 +108,11 @@ export const GameProvider = ({ children }: { children: React.ReactNode }) => {
 
       const newRows = [...rows];
       const updatedRow = newRows[activeRow];
-
-      const guessIndex = guess.length;
-      updatedRow.letters[guessIndex].value = letter;
-
+      const letterIndex = guess.length;
+      updatedRow.guess[letterIndex].value = letter;
       setRows(newRows);
     },
-    [rows, activeRow, guess, handleBackspace]
+    [guess, rows, activeRow, handleBackspace]
   );
 
   const value = useMemo(

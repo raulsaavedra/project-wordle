@@ -88,11 +88,11 @@ const compareStatus = (a: LetterStatus, b: LetterStatus): LetterStatus => {
  */
 export const getKeyboardLetterStatus = (
   letter: string,
-  rows: { letters: Letter[] }[]
+  rows: { guess: Letter[] }[]
 ): LetterStatus => {
   return rows.reduce((status, row) => {
-    const letterStatuses = row.letters
-      .filter((l) => l.value.toUpperCase() === letter)
+    const letterStatuses = row.guess
+      .filter((l) => l.value.toUpperCase() === letter.toUpperCase())
       .map((l) => l.status);
 
     return letterStatuses.reduce(

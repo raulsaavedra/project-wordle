@@ -3,12 +3,12 @@ import { Letter } from "../Letter";
 import { useContext } from "react";
 import { GameContext } from "@/providers/GameProvider";
 
-export const Row = ({ letters, index }: IRow) => {
+export const Row = ({ guess, index }: IRow) => {
   const { activeRow } = useContext(GameContext);
   const isGuessing = activeRow ? activeRow > index : false;
   return (
     <div className="flex gap-1.5 justify-center">
-      {letters.map((letter, index) => (
+      {guess.map((letter, index) => (
         <Letter
           key={letter.id}
           letter={letter}

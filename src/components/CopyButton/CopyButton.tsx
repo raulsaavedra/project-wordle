@@ -20,12 +20,12 @@ const formatGameResult = (
   answer: string
 ): string => {
   const filledRows = rows.filter((row) =>
-    row.letters.every((letter) => letter.value !== "")
+    row.guess.every((letter) => letter.value !== "")
   );
 
   const resultPattern = filledRows
     .map((row) =>
-      row.letters
+      row.guess
         .map((letter, index) => getLetterStatus(letter.value, answer, index))
         .join("")
     )
