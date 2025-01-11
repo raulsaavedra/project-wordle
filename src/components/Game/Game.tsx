@@ -8,13 +8,13 @@ import { GameProvider } from "@/providers/GameProvider";
 
 export const Game = () => {
   return (
-    <GameProvider>
-      <div className="pb-10">
+    <div className="pb-10">
+      <GameProvider>
         <Header />
         <RowList />
         <Keyboard />
         <Finished />
-      </div>
-    </GameProvider>
+      </GameProvider>
+    </div>
   );
 };
