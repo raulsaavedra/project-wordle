@@ -1,16 +1,10 @@
-import React from "react";
-import { IRow, Letter } from "../types";
+import React, { useContext } from "react";
+import { Letter } from "../types";
 import { statusMap } from "../Letter/Letter";
 import { motion } from "motion/react";
 import { getKeyboardLetterStatus } from "@/utils/letterStatus";
-
-interface KeyboardProps {
-  handleLetterChange: (letter: string) => void;
-  handleSubmit: () => void;
-  input: string;
-  gameStatus: string;
-  rows: IRow[];
-}
+import { GameContext } from "@/providers/GameProvider";
+import { useKeyDown } from "@/hooks/useKeydown";
 
 const keyStatusMap = {
   ...statusMap,
@@ -26,12 +20,10 @@ const KEYBOARD_ROWS = [
   ["ENTER", "Z", "X", "C", "V", "B", "N", "M", "⌫"],
 ];
 
-export const Keyboard: React.FC<KeyboardProps> = ({
-  handleLetterChange,
-  handleSubmit,
-  gameStatus,
-  rows,
-}) => {
+export const Keyboard: React.FC = () => {
+  const { handleLetterChange, handleSubmit, gameStatus, rows } =
+    useContext(GameContext);
+
   const handleKeyClick = (key: string) => {
     if (gameStatus !== "playing") return;
     if (key === "ENTER") {
@@ -46,23 +38,22 @@ export const Keyboard: React.FC<KeyboardProps> = ({
     return getKeyboardLetterStatus(letter, rows);
   };
 
-  React.useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (gameStatus !== "playing") return;
+  const handleKeyDown = (key: string) => {
+    if (gameStatus !== "playing") return;
+    if (key === "BACKSPACE") {
+      return handleLetterChange("⌫");
+    }
+    if (key === "ENTER") {
+      return handleSubmit();
+    }
+    if (key.length === 1 && key.match(/[A-Z]/)) {
+      return handleLetterChange(key);
+    }
+  };
 
-      const key = e.key.toUpperCase();
-      if (key === "BACKSPACE") {
-        handleLetterChange("⌫");
-      } else if (key === "ENTER") {
-        handleSubmit();
-      } else if (key.length === 1 && key.match(/[A-Z]/)) {
-        handleLetterChange(key);
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [gameStatus, handleLetterChange, handleSubmit]);
+  useKeyDown((e) => {
+    handleKeyDown(e.key.toUpperCase());
+  });
 
   return (
     <div className="mt-8 w-full max-w-2xl mx-auto">

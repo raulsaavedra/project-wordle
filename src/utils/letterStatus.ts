@@ -12,7 +12,7 @@ const checkLetterInAnswer = (
 ): { exactMatch: boolean; exists: boolean } => {
   const letterLower = letter.toLowerCase();
   const answerLower = answer.toLowerCase();
-  
+
   return {
     exactMatch: letterLower === answerLower[index],
     exists: answerLower.includes(letterLower),
@@ -30,14 +30,16 @@ const getStatusFromCheck = (
   return "incorrect";
 };
 
+export const guessWord = (guess: string, answer: string): Letter[] => {
+  return guess
+    .split("")
+    .map((letter, index) => guessLetter(letter, index, answer));
+};
+
 /**
  * Get status for a single letter guess
  */
-export const guessLetter = (
-  letter: string,
-  index: number,
-  answer: string
-): Letter => {
+const guessLetter = (letter: string, index: number, answer: string): Letter => {
   const check = checkLetterInAnswer(letter, answer, index);
   const status = getStatusFromCheck(check);
 
@@ -65,7 +67,12 @@ export const letterStatusToEmoji = (
 /**
  * Status hierarchy for determining the most relevant status
  */
-const STATUS_HIERARCHY: LetterStatus[] = ["correct", "misplaced", "incorrect", "default"];
+const STATUS_HIERARCHY: LetterStatus[] = [
+  "correct",
+  "misplaced",
+  "incorrect",
+  "default",
+];
 
 /**
  * Compare two statuses to determine which has higher precedence
@@ -87,7 +94,7 @@ export const getKeyboardLetterStatus = (
     const letterStatuses = row.letters
       .filter((l) => l.value.toUpperCase() === letter)
       .map((l) => l.status);
-    
+
     return letterStatuses.reduce(
       (currentStatus, newStatus) => compareStatus(currentStatus, newStatus),
       status

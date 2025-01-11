@@ -1,20 +1,10 @@
 import { AnimatePresence } from "motion/react";
-import { IRow } from "../types";
 import { Dialog, DialogContent, DialogTitle } from "../ui/dialog";
 import { Button } from "../ui/button";
-import React from "react";
+import React, { useContext } from "react";
 import { CopyButton } from "../CopyButton";
 import Image from "next/image";
-
-interface FinishedProps {
-  gameStatus: "win" | "lose" | "playing" | "guessing" | "goose";
-  lastGuess?: string;
-  rows: IRow[];
-  answer: string;
-  handleOpenModal: () => void;
-  handleCloseModal: () => void;
-  isModalOpen: boolean;
-}
+import { GameContext } from "@/providers/GameProvider";
 
 interface GameStatusMessageProps {
   children: React.ReactNode;
@@ -35,23 +25,18 @@ const GameStatusMessage = ({ children, variant }: GameStatusMessageProps) => {
   );
 };
 
-export const Finished = ({
-  gameStatus,
-  lastGuess,
-  rows,
-  answer,
-  handleOpenModal,
-  handleCloseModal,
-  isModalOpen,
-}: FinishedProps) => {
+export const Finished = () => {
+  const { gameStatus, lastGuess, resetGame } = useContext(GameContext);
+
+  const isModalOpen =
+    gameStatus === "win" || gameStatus === "lose" || gameStatus === "goose";
+
   return (
     <div className="flex justify-center mt-8 max-w-xs text-center mx-auto">
       <AnimatePresence>
         <Dialog
           open={isModalOpen}
-          onOpenChange={(open) =>
-            open ? handleOpenModal() : handleCloseModal()
-          }
+          onOpenChange={(open) => (open ? null : resetGame())}
         >
           <DialogContent>
             <DialogTitle
@@ -85,8 +70,8 @@ export const Finished = ({
               </GameStatusMessage>
             )}
             <div className="flex gap-4 justify-center mt-3">
-              <Button onClick={handleCloseModal}>Reset 🔃</Button>
-              <CopyButton gameStatus={gameStatus} rows={rows} answer={answer} />
+              <Button onClick={resetGame}>Reset 🔃</Button>
+              <CopyButton />
             </div>
           </DialogContent>
         </Dialog>

@@ -1,6 +1,7 @@
 interface IAnswer {
   word: string;
   date: Date;
+  index: number;
 }
 
 const createAnswerArray = () => {
@@ -12,6 +13,7 @@ const createAnswerArray = () => {
     return {
       word,
       date,
+      index,
     } as IAnswer;
   });
 };
@@ -25,9 +27,9 @@ const getAnswer = () => {
   );
   if (!answer) {
     const randomIndex = Math.floor(Math.random() * answers.length);
-    return answers[randomIndex].word;
+    return answers[randomIndex];
   }
-  return answer?.word;
+  return answer;
 };
 
 const words: string[] = [

@@ -1,15 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { IRow } from "../types";
 import { AnimatePresence, motion } from "motion/react";
 import { Button } from "../ui/button";
 import { letterStatusToEmoji } from "@/utils/letterStatus";
-
-interface CopyButtonProps {
-  gameStatus: string;
-  rows: IRow[];
-  gameNumber?: number;
-  answer: string;
-}
+import { GameContext } from "@/providers/GameProvider";
+import { getAnswer } from "../answers";
 
 const getLetterStatus = (
   letter: string,
@@ -39,17 +34,15 @@ const formatGameResult = (
   return `Wordle ${gameNumber} ${filledRows.length}/6\n\n${resultPattern}`;
 };
 
-export const CopyButton: React.FC<CopyButtonProps> = ({
-  gameStatus,
-  rows,
-  gameNumber = 1,
-  answer,
-}) => {
+export const CopyButton: React.FC = () => {
+  const { rows, gameStatus } = useContext(GameContext);
   const [copied, setCopied] = React.useState(false);
+  const answer = getAnswer();
+
   const handleCopy = async () => {
     if (gameStatus !== "win" && gameStatus !== "lose") return;
 
-    const result = formatGameResult(rows, gameNumber, answer);
+    const result = formatGameResult(rows, answer.index, answer.word);
 
     try {
       await navigator.clipboard.writeText(result);
